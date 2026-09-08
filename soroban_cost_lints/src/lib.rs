@@ -58,7 +58,7 @@ pub fn register_lints(sess: &rustc_session::Session, lint_store: &mut LintStore)
             OPTION_WRAPPING_IN_STORAGE,
             LEDGER_CONTEXT_READ_IN_LOOP,
             REDUNDANT_REQUIRE_AUTH,
-    ];
+        ]);
 
     lint_store.register_late_pass(|_| Box::new(discarded_storage_read::DiscardedStorageRead));
     lint_store.register_late_pass(|_| Box::new(ledger_context_read_in_loop::LedgerContextReadInLoop));
@@ -399,6 +399,12 @@ pub const LINT_METADATA: &[LintMeta] = &[
         rationale: "Unnecessary string-to-bytes conversions waste CPU cycles.",
     },
     LintMeta {
+        name: "unnecessary_host_function_call_legacy",
+        category: LintCategory::Host,
+        description: "Calls host functions that could be hoisted or avoided (legacy)",
+        rationale: "Legacy lint retained for backward compatibility.",
+    },
+    LintMeta {
         name: "map_insert_in_loop",
         category: LintCategory::Compute,
         description: "Inserts into Map inside a loop",
@@ -511,10 +517,14 @@ pub const LINT_METADATA: &[LintMeta] = &[
         category: LintCategory::Storage,
         description: "Constructs the same storage key expression in multiple function bodies",
         rationale: "Rebuilding the same key across functions wastes the symbol-construction host call and introduces independent chances to typo the key into a silent, undebuggable state bug.",
+    },
+    LintMeta {
         name: "option_wrapping_in_storage",
         category: LintCategory::Storage,
         description: "Stores an Option<T> in storage where the key already models absence",
         rationale: "Storage already models absence — a missing key returns None. Storing Option<T> creates a redundant three-state model.",
+    },
+    LintMeta {
         name: "ledger_context_read_in_loop",
         category: LintCategory::Compute,
         description: "Reads a ledger context value (sequence, timestamp, network_id) inside a loop",
