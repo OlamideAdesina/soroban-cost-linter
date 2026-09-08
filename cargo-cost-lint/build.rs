@@ -64,11 +64,9 @@ fn parse_register_lints(content: &str) -> Result<Vec<String>> {
     }
     // Fall back to legacy register_lints pattern
     let start_marker = "lint_store.register_lints(&[";
-    let start = content
-        .find(start_marker)
-        .ok_or_else(|| Error::Parse(
-            "Could not find register_lints or dylint_lint_impl in lib.rs".into()
-        ))?;
+    let start = content.find(start_marker).ok_or_else(|| {
+        Error::Parse("Could not find register_lints or dylint_lint_impl in lib.rs".into())
+    })?;
     let content_after = &content[start..];
     let end = content_after
         .find("]);")
@@ -374,8 +372,7 @@ fn run() -> Result<()> {
                 if !names.contains(&stem.to_lowercase()) {
                     eprintln!(
                         "warning: doc file '{:?}' exists in docs/lints/ but lint '{}' is not registered — skipping orphan check",
-                        path,
-                        stem
+                        path, stem
                     );
                 }
             }
@@ -443,7 +440,10 @@ fn run() -> Result<()> {
                                 .split("::")
                                 .last()
                                 .unwrap_or_else(|| {
-                                    panic!("Could not extract category name from: {}", category_part)
+                                    panic!(
+                                        "Could not extract category name from: {}",
+                                        category_part
+                                    )
                                 });
                             category_map.insert(raw_lint.to_lowercase(), category.to_string());
                         }

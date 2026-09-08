@@ -100,9 +100,7 @@ fn parse_lib_rs(content: &str) -> Vec<LintEntry> {
                             lint_var = val.trim().trim_matches('"').to_string();
                         } else if let Some(val) = t.strip_prefix("category:") {
                             let raw = val.trim();
-                            let cat_str = raw
-                                .strip_prefix("LintCategory::")
-                                .unwrap_or(raw);
+                            let cat_str = raw.strip_prefix("LintCategory::").unwrap_or(raw);
                             category = if cat_str == "Storage" {
                                 "StorageOperations".to_string()
                             } else {
