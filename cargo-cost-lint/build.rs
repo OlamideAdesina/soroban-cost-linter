@@ -368,13 +368,12 @@ fn run() -> Result<()> {
             if path.extension().and_then(|ext| ext.to_str()) == Some("md")
                 && let Some(stem) = path.file_stem().and_then(|s| s.to_str())
                 && stem != "README"
+                && !names.contains(&stem.to_lowercase())
             {
-                if !names.contains(&stem.to_lowercase()) {
-                    eprintln!(
-                        "warning: doc file '{:?}' exists in docs/lints/ but lint '{}' is not registered — skipping orphan check",
-                        path, stem
-                    );
-                }
+                eprintln!(
+                    "warning: doc file '{:?}' exists in docs/lints/ but lint '{}' is not registered — skipping orphan check",
+                    path, stem
+                );
             }
         }
     }
